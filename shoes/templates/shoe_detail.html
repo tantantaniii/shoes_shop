@@ -1,0 +1,38 @@
+{% extends 'shop/base.html' %}
+
+{% block content %}
+<h2>{{ shoe.name }} ({{ shoe.brand.name }})</h2>
+<p><strong>Цена:</strong> {{ shoe.price }} ₽</p>
+<p><strong>Категория:</strong> {{ shoe.category.name }}</p>
+<p><strong>Пол:</strong> 
+    {% if shoe.gender == 'M' %}Мужская
+    {% elif shoe.gender == 'F' %}Женская
+    {% else %}Унисекс{% endif %}
+</p>
+<p><strong>Сезон:</strong> 
+    {% if shoe.season == 'W' %}Зима
+    {% elif shoe.season == 'S' %}Лето
+    {% elif shoe.season == 'D' %}Демисезон
+    {% else %}Всесезон{% endif %}
+</p>
+<p><strong>Материал верха:</strong> {{ shoe.material_upper }}</p>
+<p><strong>Материал стельки:</strong> {{ shoe.material_insole }}</p>
+<p><strong>Материал подошвы:</strong> {{ shoe.material_outsole }}</p>
+{% if shoe.heel_height_cm %}
+    <p><strong>Высота каблука:</strong> {{ shoe.heel_height_cm }} см</p>
+{% endif %}
+<p><strong>Водонепроницаемая:</strong> {{ shoe.is_waterproof|yesno:"Да,Нет" }}</p>
+
+<h3>Размеры в наличии:</h3>
+<ul>
+    {% for size in shoe.sizes.all %}
+        {% if size.stock > 0 %}
+            <li>Размер {{ size.size }} — остаток: {{ size.stock }}</li>
+        {% endif %}
+    {% empty %}
+    <li>Нет в наличии</li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'shop:shoe_list' %}">← Назад к каталогу</a>
+{% endblock %}
