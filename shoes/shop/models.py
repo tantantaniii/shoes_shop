@@ -1,4 +1,8 @@
 from django.db import models
+import os
+
+def shoe_image_upload_to(instance, filename):
+    return os.path.join('shoes', instance.brand.name, filename)
 
 class Category(models.Model):
     name = models.CharField(max_length=100, verbose_name="Название категории")
@@ -49,6 +53,12 @@ class Shoe(models.Model):
     heel_height_cm = models.FloatField(null=True, blank=True, verbose_name="Высота каблука (см)")
     is_waterproof = models.BooleanField(default=False, verbose_name="Водонепроницаемость")
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Цена")
+    image = models.ImageField(
+        upload_to=shoe_image_upload_to,
+        blank=True,
+        null=True,
+        verbose_name="Изображение"
+    )
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата добавления")
 
     class Meta:
@@ -70,8 +80,10 @@ class ShoeSize(models.Model):
         unique_together = ('shoe', 'size')
 
     def __str__(self):
-        return f"{self.shoe} — размер {self.size} (остаток: {self.stock}"
+        return f"{self.shoe} — размер {self.size} (остаток: {self.stock})"
 
+
+# === Менеджеры и методы выборки ===
 
 class ShoeQuerySet(models.QuerySet):
     def by_gender(self, gender_code):
@@ -92,19 +104,15 @@ class ShoeManager(models.Manager):
         return ShoeQuerySet(self.model, using=self._db)
 
     def men_shoes(self):
-
         return self.get_queryset().by_gender('M')
 
     def women_shoes(self):
-
         return self.get_queryset().by_gender('F')
 
     def summer_shoes(self):
-
         return self.get_queryset().by_season('S')
 
     def available_in_size(self, size):
-
         return self.get_queryset().available_in_size(size)
 
 

@@ -1,0 +1,100 @@
+<!-- shop/templates/shop/base.html -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Магазин обуви</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav {
+            background: #333;
+            color: white;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+            nav a {
+                color: white;
+                text-decoration: none;
+                margin: 0 10px;
+            }
+
+        .container {
+            padding: 20px;
+        }
+
+        .shoe-card {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+
+        .shoe-image {
+            max-width: 200px;
+            height: auto;
+        }
+
+        .filters {
+            background: #f5f5f5;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border: 1px solid #ccc;
+        }
+
+        .messages div {
+            margin-bottom: 10px;
+            padding: 8px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div>
+            <a href="{% url 'shop:home' %}">Главная</a> |
+            <a href="{% url 'shop:shoe_list' %}">Каталог</a>
+        </div>
+        <div>
+            {% if user.is_authenticated %}
+            Привет, {{ user.username }}! |
+            <a href="{% url 'shop:logout' %}">Выйти</a>
+            {% else %}
+            <a href="{% url 'shop:login' %}">Войти</a> |
+            <a href="{% url 'shop:register' %}">Регистрация</a>
+            {% endif %}
+            | <a href="{% url 'shop:cart_detail' %}">🛒 Корзина</a>
+        </div>
+    </nav>
+    <div class="container">
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div style="color: {% if 'error' in message.tags %}red{% elif 'success' in message.tags %}green{% else %}inherit{% endif %};">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

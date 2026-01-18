@@ -1,0 +1,47 @@
+﻿{% extends 'shop/base.html' %}
+
+{% block content %}
+<h1>Добро пожаловать в магазин обуви!</h1>
+
+<h2>Новинки</h2>
+<div style="display: flex; gap: 20px; flex-wrap: wrap;">
+    {% for shoe in new_shoes %}
+    <div class="shoe-card" style="width: 180px;">
+        {% if shoe.image %}
+        <img src="{{ shoe.image.url }}" alt="{{ shoe.name }}" class="shoe-image">
+        {% endif %}
+        <h3>{{ shoe.name }}</h3>
+        <p>{{ shoe.price }} ₽</p>
+        <a href="{% url 'shop:shoe_detail' shoe.pk %}">Подробнее</a>
+    </div>
+    {% endfor %}
+</div>
+
+<h2>Зимняя коллекция</h2>
+<div style="display: flex; gap: 20px; flex-wrap: wrap;">
+    {% for shoe in winter_shoes %}
+    <div class="shoe-card" style="width: 180px;">
+        {% if shoe.image %}
+        <img src="{{ shoe.image.url }}" alt="{{ shoe.name }}" class="shoe-image">
+        {% endif %}
+        <h3>{{ shoe.name }}</h3>
+        <p>{{ shoe.price }} ₽</p>
+        <a href="{% url 'shop:shoe_detail' shoe.pk %}">Подробнее</a>
+    </div>
+    {% endfor %}
+</div>
+
+<h2>Летняя коллекция</h2>
+<div style="display: flex; gap: 20px; flex-wrap: wrap;">
+    {% for shoe in summer_shoes %}
+    <div class="shoe-card" style="width: 180px;">
+        {% if shoe.image %}
+        <img src="{{ shoe.image.url }}" alt="{{ shoe.name }}" class="shoe-image">
+        {% endif %}
+        <h3>{{ shoe.name }}</h3>
+        <p>{{ shoe.price }} ₽</p>
+        <a href="{% url 'shop:shoe_detail' shoe.pk %}">Подробнее</a>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,1 +1,55 @@
+# Django #
+###########
+*.pyc
+__pycache__/
+db.sqlite3
+media/
+staticfiles/
 .env
+.venv/
+venv/
+env/
+ENV/
+
+# IDE / Editors #
+#################
+.vs/
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Logs and databases #
+#######################
+*.log
+*.sqlite3
+
+# Python #
+##########
+*.py[cod]
+*$py.class
+*venv*/
+.env.local
+.env
+
+# macOS #
+#########
+.DS_Store
+
+# Windows #
+###########
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Backup files #
+################
+*~
+.*.swp
+.*.swo
+
+# Local configuration #
+#######################
+local_settings.py

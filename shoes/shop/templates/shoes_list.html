@@ -1,0 +1,120 @@
+<!-- shop/templates/shop/shoe_list.html -->
+{% extends 'shop/base.html' %}
+
+{% block content %}
+<div class="filters">
+    <h3>Фильтры</h3>
+    <form method="get">
+        <!-- Поиск -->
+        <label>
+            Поиск:
+            <input type="text" name="q" value="{{ search_query }}" placeholder="Название или бренд...">
+        </label>
+
+        <!-- Пол -->
+        <label>
+            Пол:
+            <select name="gender">
+                <option value="">Любой</option>
+                <option value="M" {% if selected_gender= ='M' %}selected{% endif %}>Мужская</option>
+                <option value="F" {% if selected_gender= ='F' %}selected{% endif %}>Женская</option>
+                <option value="U" {% if selected_gender= ='U' %}selected{% endif %}>Унисекс</option>
+            </select>
+        </label>
+
+        <!-- Сезон -->
+        <label>
+            Сезон:
+            <select name="season">
+                <option value="">Любой</option>
+                <option value="W" {% if selected_season= ='W' %}selected{% endif %}>Зима</option>
+                <option value="S" {% if selected_season= ='S' %}selected{% endif %}>Лето</option>
+                <option value="D" {% if selected_season= ='D' %}selected{% endif %}>Демисезон</option>
+                <option value="A" {% if selected_season= ='A' %}selected{% endif %}>Всесезон</option>
+            </select>
+        </label>
+
+        <!-- Размер -->
+        <label>Размер: <input type="number" step="0.5" name="size" value="{{ selected_size }}"></label>
+
+        <!-- Категория -->
+        <label>
+            Категория:
+            <select name="category">
+                <option value="">Все</option>
+                {% for cat in categories %}
+                <option value="{{ cat.id }}" {% if selected_category= =cat.id|stringformat:"i" %}selected{% endif %}>
+                    {{ cat.name }}
+                </option>
+                {% endfor %}
+            </select>
+        </label>
+
+        <!-- Бренд -->
+        <label>
+            Бренд:
+            <select name="brand">
+                <option value="">Все</option>
+                {% for brand in brands %}
+                <option value="{{ brand.id }}" {% if selected_brand= =brand.id|stringformat:"i" %}selected{% endif %}>
+                    {{ brand.name }}
+                </option>
+                {% endfor %}
+            </select>
+        </label>
+
+        <button type="submit">Применить</button>
+    </form>
+</div>
+
+{% if page_obj %}
+    {% for shoe in page_obj %}
+<div class="shoe-card">
+    {% if shoe.image %}
+    <img src="{{ shoe.image.url }}" alt="{{ shoe.name }}" class="shoe-image">
+    {% endif %}
+    <h3>{{ shoe.name }} ({{ shoe.brand.name }})</h3>
+    <p><strong>Цена:</strong> {{ shoe.price }} ₽</p>
+    <p><strong>Категория:</strong> {{ shoe.category.name }}</p>
+    <p>
+        <strong>Сезон:</strong>
+        {% if shoe.season == 'W' %}Зима
+        {% elif shoe.season == 'S' %}Лето
+        {% elif shoe.season == 'D' %}Демисезон
+        {% else %}Всесезон{% endif %}
+    </p>
+    <p><strong>Материал верха:</strong> {{ shoe.material_upper }}</p>
+    {% if shoe.heel_height_cm %}
+    <p>Высота каблука: {{ shoe.heel_height_cm }} см</p>
+    {% endif %}
+    <div class="sizes">
+        Доступные размеры:
+        {% for sz in shoe.sizes.all %}
+        {% if sz.stock > 0 %}
+        {{ sz.size }} (в наличии: {{ sz.stock }})
+        {% endif %}
+        {% endfor %}
+    </div>
+    <a href="{% url 'shop:shoe_detail' shoe.pk %}">Подробнее →</a>
+</div>
+    {% endfor %}
+
+<!-- Пагинация -->
+<div style="margin-top: 20px;">
+    {% if page_obj.has_previous %}
+    <a href="?page=1{% for k,v in request.GET.items %}{% if k != 'page' %}&{{ k }}={{ v }}{% endif %}{% endfor %}">« Первая</a>
+    <a href="?page={{ page_obj.previous_page_number }}{% for k,v in request.GET.items %}{% if k != 'page' %}&{{ k }}={{ v }}{% endif %}{% endfor %}">Назад</a>
+    {% endif %}
+
+    Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}
+
+    {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}{% for k,v in request.GET.items %}{% if k != 'page' %}&{{ k }}={{ v }}{% endif %}{% endfor %}">Вперёд</a>
+    <a href="?page={{ page_obj.paginator.num_pages }}{% for k,v in request.GET.items %}{% if k != 'page' %}&{{ k }}={{ v }}{% endif %}{% endfor %}">Последняя »</a>
+    {% endif %}
+</div>
+
+{% else %}
+<p>Обувь не найдена.</p>
+{% endif %}
+{% endblock %}

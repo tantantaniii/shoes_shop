@@ -1,0 +1,12 @@
+<!-- shop/templates/shop/login.html -->
+{% extends 'shop/base.html' %}
+
+{% block content %}
+<h2>Вход</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Войти</button>
+</form>
+<p>Нет аккаунта? <a href="{% url 'shop:register' %}">Зарегистрируйтесь</a></p>
+{% endblock %}
